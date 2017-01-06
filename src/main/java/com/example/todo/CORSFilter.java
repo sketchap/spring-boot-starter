@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.*;
 
-
+// todo use cors annotation
 @Component
 public class CORSFilter implements Filter {
 

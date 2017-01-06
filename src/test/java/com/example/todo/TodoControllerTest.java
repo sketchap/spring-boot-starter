@@ -11,11 +11,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Created by stschapk on 17.12.16.
- */
 @WebMvcTest(TodoController.class)
 public class TodoControllerTest extends AbstractTestNGSpringContextTests {
 
@@ -27,5 +28,17 @@ public class TodoControllerTest extends AbstractTestNGSpringContextTests {
         // when // then
         this.mockMvc.perform(get("/todos").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnTodoWhichWasPosted() throws Exception {
+        // when // then
+        this.mockMvc
+                .perform(post("/todos")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content("post a todo"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string("post a todo"));
     }
 }
