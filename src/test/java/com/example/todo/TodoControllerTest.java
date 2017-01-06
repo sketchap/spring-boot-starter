@@ -1,20 +1,16 @@
 package com.example.todo;
 
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.annotations.Test;
-
-import org.junit.runner.RunWith;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.test.web.servlet.MockMvc;
+import org.testng.annotations.Test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TodoController.class)
@@ -22,6 +18,9 @@ public class TodoControllerTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType());
+
 
     @Test
     public void listTodos() throws Exception {
@@ -32,13 +31,17 @@ public class TodoControllerTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void shouldReturnTodoWhichWasPosted() throws Exception {
+        // given
+        Todo todo = new Todo("test");
+        ObjectMapper mapper = new ObjectMapper();
+
         // when // then
         this.mockMvc
                 .perform(post("/todos")
                         .accept(MediaType.APPLICATION_JSON)
-                        .content("post a todo"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(todo)))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("post a todo"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
-}
+ }

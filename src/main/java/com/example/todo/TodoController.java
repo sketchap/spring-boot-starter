@@ -4,7 +4,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/todos")
+@RequestMapping(value = "/")
 public class TodoController {
 
     @RequestMapping(method = RequestMethod.GET)
