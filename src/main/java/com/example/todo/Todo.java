@@ -2,6 +2,7 @@ package com.example.todo;
 
 public class Todo {
 
+    private int id;
     private boolean completed;
     private int order;
     private String title;

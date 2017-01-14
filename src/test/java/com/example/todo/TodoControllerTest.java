@@ -8,6 +8,9 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testng.annotations.Test;
 
+import java.util.HashSet;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -24,9 +27,15 @@ public class TodoControllerTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void listTodos() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+
         // when // then
-        this.mockMvc.perform(get("/todos").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(mapper.writeValueAsString(new HashSet<Todo>())));
     }
 
     @Test
@@ -37,11 +46,23 @@ public class TodoControllerTest extends AbstractTestNGSpringContextTests {
 
         // when // then
         this.mockMvc
-                .perform(post("/todos")
+                .perform(post("/")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(todo)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
- }
+
+    @Test
+    public void shouldDeleteAllTodos() throws Exception {
+        // when // then
+        this.mockMvc
+                .perform(delete("/")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
+}
