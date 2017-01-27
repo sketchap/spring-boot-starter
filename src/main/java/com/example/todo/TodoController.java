@@ -21,9 +21,11 @@ public class TodoController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<String> createTodo(@RequestBody String todo){
+    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        todo.setId(todos.size() + 1);
+        todos.add(todo);
         return ResponseEntity.ok().headers(httpHeaders).body(todo);
     }
 

@@ -64,5 +64,26 @@ public class TodoControllerTest extends AbstractTestNGSpringContextTests {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void shouldAddTodoToListOfTodosAtTheRootUrl() throws Exception {
+        // given
+        Todo todo = new Todo("test");
+        ObjectMapper mapper = new ObjectMapper();
+        // controller erzeugen und methode aufrufen oder nur mit api interagieren?
+        // when
+        this.mockMvc
+            .perform(post("/")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(todo)))
+            .andExpect(status().isOk());
 
+        HashSet<Todo> todos = new HashSet<>();
+        todo.setId(1);
+        todos.add(todo);
+        this.mockMvc
+            .perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(mapper.writeValueAsString(todos)));
+    }
 }

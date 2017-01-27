@@ -1,5 +1,8 @@
 package com.example.todo;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"id", "title", "order", "completed"})
 public class Todo {
 
     private int id;
@@ -12,6 +15,15 @@ public class Todo {
 
     public Todo(String title) {
         this.title = title;
+    }
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public boolean isCompleted() {
@@ -36,5 +48,15 @@ public class Todo {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "Todo{" +
+                "id=" + id +
+                ", completed=" + completed +
+                ", order=" + order +
+                ", title='" + title + '\'' +
+                '}';
     }
 }
