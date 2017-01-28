@@ -13,20 +13,29 @@ import java.util.Set;
 @RequestMapping(value = "/")
 public class TodoController {
 
-    Set<Todo> todos = new HashSet<>();
+    Set<ResourceWithUrl> todos = new HashSet<>();
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Set<Todo>> listTodos(){
+    public ResponseEntity<Set<ResourceWithUrl>> listTodos(){
         return ResponseEntity.ok().body(todos);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo){
+    public ResponseEntity<ResourceWithUrl> createTodo(@RequestBody Todo todo){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
         todo.setId(todos.size() + 1);
-        todos.add(todo);
-        return ResponseEntity.ok().headers(httpHeaders).body(todo);
+        ResourceWithUrl<Todo> todoWithUrl = createResourceWithUrl(todo);
+        todos.add(todoWithUrl);
+        return ResponseEntity.ok().headers(httpHeaders).body(todoWithUrl);
+    }
+
+    private ResourceWithUrl<Todo> createResourceWithUrl(Todo todo) {
+        return new ResourceWithUrl<>(todo, createUrl(todo));
+    }
+
+    private String createUrl(Todo todo) {
+        return String.valueOf(todo.getId());
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
