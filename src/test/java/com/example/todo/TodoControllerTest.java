@@ -1,6 +1,7 @@
 package com.example.todo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -24,11 +25,9 @@ public class TodoControllerTest extends AbstractTestNGSpringContextTests {
 
     private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType());
 
-
     @Test
     public void listTodos() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-
 
         // when // then
         this.mockMvc.perform(get("/")
@@ -85,5 +84,17 @@ public class TodoControllerTest extends AbstractTestNGSpringContextTests {
             .perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(todos)));
+    }
+
+    @Test
+    public void shouldGetTodoById() throws Exception {
+        // given
+        // TODO prepare controller / model
+
+        // when
+        this.mockMvc
+                .perform(get("/1"))
+                .andExpect(status().isNotFound());
+
     }
 }
