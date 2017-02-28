@@ -1,12 +1,13 @@
 package com.example.todo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/")
@@ -47,10 +48,10 @@ public class TodoController {
     }
 
     private ResourceWithUrl<Todo> createResourceWithUrl(Todo todo) {
-        return new ResourceWithUrl<>(todo, createUrl(todo));
+        return new ResourceWithUrl<>(todo, createHrefWithSelfRel(todo));
     }
 
-    private String createUrl(Todo todo) {
-        return String.valueOf(todo.getId());
+    private String createHrefWithSelfRel(Todo todo) {
+        return linkTo(methodOn(TodoController.class).getTodoById(String.valueOf(todo.getId()))).withSelfRel().getHref();
     }
 }
