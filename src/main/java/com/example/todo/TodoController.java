@@ -39,7 +39,7 @@ public class TodoController {
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "{id}")
-    public ResponseEntity<ResourceWithUrl> updateTitle(@PathVariable String id, @RequestBody Todo todo){
+    public ResponseEntity<ResourceWithUrl> updateTodo(@PathVariable String id, @RequestBody Todo todo){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
@@ -49,12 +49,10 @@ public class TodoController {
         }
 
         Todo currentTodo = todoOptional.get();
-        todo.setOrder(currentTodo.getOrder());
-        todo.setCompleted(currentTodo.isCompleted());
-
+        Todo newTodo = currentTodo.merge(todo);
         todos.remove(currentTodo);
-        todos.add(todo);
-        return ResponseEntity.ok().headers(httpHeaders).body(createResourceWithUrl(todo));
+        todos.add(newTodo);
+        return ResponseEntity.ok().headers(httpHeaders).body(createResourceWithUrl(newTodo));
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
