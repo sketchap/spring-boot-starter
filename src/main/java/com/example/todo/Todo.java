@@ -3,12 +3,16 @@ package com.example.todo;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.Objects;
+
+import static java.util.Objects.nonNull;
+
 @JsonPropertyOrder({"id", "title", "order", "completed"})
 public class Todo {
 
     private int id;
-    private boolean completed;
-    private int order;
+    private Boolean completed;
+    private Integer order;
     private String title;
 
     // required for jackson
@@ -18,6 +22,21 @@ public class Todo {
         this.title = title;
     }
 
+    public Todo(int id, String title, Integer order, Boolean completed){
+        this.id = id;
+        this.title = title;
+        this.order = order;
+        this.completed = completed;
+    }
+
+    public Todo merge(Todo todo){
+        Todo newTodo = new Todo(todo.getTitle());
+        newTodo.setId(todo.getId());
+        newTodo.setCompleted(nonNull(todo.isCompleted()) ? todo.isCompleted() : this.isCompleted());
+        newTodo.setTitle(nonNull(todo.getTitle()) ? todo.getTitle() : this.getTitle());
+        newTodo.setOrder(nonNull(todo.getOrder()) ? todo.getOrder() : this.getOrder());
+        return newTodo;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -27,7 +46,7 @@ public class Todo {
         return id;
     }
 
-    public boolean isCompleted() {
+    public Boolean isCompleted() {
         return completed;
     }
 
@@ -35,7 +54,7 @@ public class Todo {
         this.completed = completed;
     }
 
-    public int getOrder() {
+    public Integer getOrder() {
         return order;
     }
 
@@ -49,6 +68,22 @@ public class Todo {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Todo todo = (Todo) o;
+        return id == todo.id &&
+                Objects.equals(completed, todo.completed) &&
+                Objects.equals(order, todo.order) &&
+                Objects.equals(title, todo.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, completed, order, title);
     }
 
     @Override
