@@ -32,9 +32,9 @@ public class Todo {
     public Todo merge(Todo todo){
         Todo newTodo = new Todo(todo.getTitle());
         newTodo.setId(todo.getId());
-        newTodo.setCompleted(nonNull(todo.isCompleted()) ? todo.isCompleted() : this.isCompleted());
-        newTodo.setTitle(nonNull(todo.getTitle()) ? todo.getTitle() : this.getTitle());
-        newTodo.setOrder(nonNull(todo.getOrder()) ? todo.getOrder() : this.getOrder());
+        newTodo.setCompleted(nonNull(todo.completed) ? todo.isCompleted() : this.isCompleted());
+        newTodo.setTitle(nonNull(todo.title) ? todo.getTitle() : this.getTitle());
+        newTodo.setOrder(nonNull(todo.order) ? todo.getOrder() : this.getOrder());
         return newTodo;
     }
 
@@ -46,16 +46,16 @@ public class Todo {
         return id;
     }
 
-    public Boolean isCompleted() {
-        return completed;
+    public boolean isCompleted() {
+        return nonNull(completed) ? completed : false;
     }
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 
-    public Integer getOrder() {
-        return order;
+    public int getOrder() {
+        return nonNull(order) ? order : 0;
     }
 
     public void setOrder(int order) {
@@ -76,9 +76,9 @@ public class Todo {
         if (o == null || getClass() != o.getClass()) return false;
         Todo todo = (Todo) o;
         return id == todo.id &&
-                Objects.equals(completed, todo.completed) &&
-                Objects.equals(order, todo.order) &&
-                Objects.equals(title, todo.title);
+                Objects.equals(this.isCompleted(), todo.isCompleted()) &&
+                Objects.equals(this.getOrder(), todo.getOrder()) &&
+                Objects.equals(this.getTitle(), todo.getTitle());
     }
 
     @Override
