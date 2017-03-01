@@ -60,6 +60,16 @@ public class TodoController {
         todos.clear();
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, value = "{id}")
+    public ResponseEntity deleteTodo(@PathVariable String id){
+        Optional<Todo> todo = findTodoById(id);
+        if(!todo.isPresent()){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        todos.remove(todo.get());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     private Optional<Todo> findTodoById(String id){
         return todos.stream().filter(t -> t.getId() == Integer.valueOf(id)).findFirst();
     }
