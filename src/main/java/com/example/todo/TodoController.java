@@ -21,7 +21,7 @@ public class TodoController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "{id}")
-    public ResponseEntity<ResourceWithUrl<Todo>> getTodoById(@PathVariable String id){
+    public ResponseEntity<ResourceWithUrl> getTodoById(@PathVariable String id){
         Optional<Todo> todo = findTodoById(id);
         if(!todo.isPresent()){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -34,6 +34,25 @@ public class TodoController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
         todo.setId(todos.size() + 1);
+        todos.add(todo);
+        return ResponseEntity.ok().headers(httpHeaders).body(createResourceWithUrl(todo));
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "{id}")
+    public ResponseEntity<ResourceWithUrl> updateTitle(@PathVariable String id, @RequestBody Todo todo){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        Optional<Todo> todoOptional = findTodoById(id); // brauch ich die Prüfung bei PATCH?
+        if(!todoOptional.isPresent()){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        Todo currentTodo = todoOptional.get();
+        todo.setOrder(currentTodo.getOrder());
+        todo.setCompleted(currentTodo.isCompleted());
+
+        todos.remove(currentTodo);
         todos.add(todo);
         return ResponseEntity.ok().headers(httpHeaders).body(createResourceWithUrl(todo));
     }
